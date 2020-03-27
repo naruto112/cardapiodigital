@@ -3,9 +3,13 @@
 module.exports = {
 
   development: {
-    client: 'sqlite3',
+    client: 'mysql',
+    version: '5.6',
     connection: {
-      filename: './src/db.sqlite'
+      host : 'ec2-18-221-220-204.us-east-2.compute.amazonaws.com',
+      user : 'renato_souza',
+      password : 'Moschetta@18',
+      database : 'cardapiodigital'
     },
     migrations: {
       directory: './src/database/migrations'
