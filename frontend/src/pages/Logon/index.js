@@ -1,32 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FiLogIn } from 'react-icons/fi'
 import { Link, useHistory } from 'react-router-dom'
-
 import api from '../../services/api'
 
 import './styles.css';
 
-import logoImg from '../../assets/logo.svg';
-import heroesImg from '../../assets/heroes.png';
+// import logoImg from '../../assets/logo.svg';
+import cardapioImg from '../../assets/logo_menu.png';
 
 export default function Logon() {
 
-    const [id, setId] = useState('');
+    const [user, setUser] = useState('');
+    const [passwd, setPasswd] = useState('');
+
+    const token = localStorage.getItem('token');
+    
     const history = useHistory();
+
+
+    useEffect(() => {
+        if(token){
+            history.push("/painel")
+        }
+    }, [token, history]);
+
 
     async function handleLogin(e){
         e.preventDefault();
 
         try{
-            const response = await api.post('sessions', { id });
+            
+            const response = await api.post('user/login', { 
+                user,
+                passwd 
+            });
 
-            localStorage.setItem('ongId', id);
-            localStorage.setItem('ongName', response.data.name);
+            const { result } = response.data;
 
-            history.push('/profile');
+            localStorage.setItem('token', result[0].token);
+            localStorage.setItem('name', result[0].name);
+            
+            history.push('/painel');
 
         }catch(err){
-            alert('Falha no Login, tente novamente')
+            alert('ERROR:', err);
         }
     }
 
@@ -34,22 +51,28 @@ export default function Logon() {
         <div>
             <div className="logon-container">
                 <section className="form">
-                    <img src={logoImg} alt="Be The Hero"/>
+                    <h1>.Cardápio Digital</h1>
                     <form onSubmit={handleLogin}>
-                        <h1>Faça seu Logon</h1>
+                        <h2>Faça seu Logon</h2>
                         <input 
-                            placeholder="Sua ID"
-                            value={id}
-                            onChange={e => setId(e.target.value)}
+                            placeholder="Seu usuário"
+                            value={user}
+                            onChange={e => setUser(e.target.value)}
+                        />
+                        <input 
+                            type="password"
+                            placeholder="Digite a senha"
+                            value={passwd}
+                            onChange={e => setPasswd(e.target.value)}
                         />
                         <button className="button" type="submit">Entrar</button>
                         <Link className="back-link" to="/register">
-                            <FiLogIn size={16} color="#E02041"/>
-                            Não tenho cadastro
+                            <FiLogIn size={16} color="#545152"/>
+                            Criar um cadastro
                         </Link>
                     </form>
                 </section>
-                <img src={heroesImg} alt="Heroes"/>
+                <img src={cardapioImg} alt="CardDigital"/>
             </div>
         </div>
     );

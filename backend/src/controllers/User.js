@@ -7,7 +7,6 @@ const connection = require('../database/connection');
 
 module.exports = {
 
-
     // EXIBE TODOS OS USUARIOS
     async all (request, response) {
         const token = request.headers.authorization;
@@ -86,12 +85,7 @@ module.exports = {
     // CRIA UM USUARIO
     async create( request, response) {
 
-        const token = request.headers.authorization;
-        const user = await  connection('usuario')
-            .where('token', token)
-            .select('*');
-
-        if(user.id) {
+        
 
             const { name, user, passwd, mail, phone } = request.body;
             const token = crypto.randomBytes(25).toString('HEX');
@@ -113,7 +107,6 @@ module.exports = {
 
             return response.json({ status: true });
 
-        }
 
     }
 

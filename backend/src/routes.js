@@ -1,20 +1,22 @@
 const express = require('express');
 
-// const OngController = require('./controllers/OngController')
-// const IncidentController = require('./controllers/IncidentController')
-// const ProfiletController = require('./controllers/ProfileController')
-// const SessiontController = require('./controllers/SessionController')
-
 const User = require('./controllers/User')
+const Cardapio = require('./controllers/Cardapio')
 
 const routes = express.Router();
 
 
+//ROUTE USUARIO
 routes.post('/user/create', User.create);
-routes.get('/user/login', User.index);
+routes.post('/user/login', User.index);
 routes.get('/user/all', User.all);
 routes.put('/user/update', User.update);
 routes.delete('/user/delete', User.delete);
+
+
+//ROUTE CARDAPIO
+routes.get('/cardapio/all', Cardapio.all)
+routes.post('/cardapio/create', Cardapio.create)
 
 
 // routes.delete('/incidents/:id', IncidentController.delete)
