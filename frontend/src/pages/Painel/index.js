@@ -34,6 +34,9 @@ export default function Painel() {
 
     }, [token, history]);
 
+    function Edit(id) {
+        history.push(`/produto/${id}`);
+    }
 
     
     // async function handleDeleteIncident(id) {
@@ -82,7 +85,7 @@ export default function Painel() {
                     <button className="btn-trash" onClick={() => {}} type="button">
                         <FiTrash2 size={20} color="#a8a8b3" />
                     </button>
-                    <button className="btn-edit" onClick={() => {}} type="button">
+                    <button className="btn-edit" onClick={() => Edit(cardapio.id)} type="button">
                         <FiEdit3 size={20} color="#a8a8b3" />
                     </button>
                 </li>     

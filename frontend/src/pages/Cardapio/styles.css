@@ -69,9 +69,11 @@
 
 
 .back-link-card {
+    position: absolute;
     display: flex;
     align-items: center;
-    margin-top: 16px;
+    margin-top: 42px;
+    margin-left: 17px;
     color: #41414d;
     font-size: 18px;
     text-decoration: none;
@@ -150,4 +152,15 @@
     position: absolute;
     margin-left: 827px;
     margin-top: -29px;
+}
+
+
+.btn-photo {
+    background-color: #797979;
+    padding: 8px;
+    color: #FFF;
+    border-radius: 8px;
+    font-family: Roboto;
+    text-decoration: none;
+    cursor: pointer;
 }

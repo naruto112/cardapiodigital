@@ -13,11 +13,48 @@ module.exports ={
             .where('token', token)
             .select('*');
 
-        const cardapio = await connection('cardapio')
+        const cardapio = await connection('menu')
             .where('usuario_id', user[0].id)
             .select('*');
 
         return response.json({ cardapio })
+    },
+
+
+    // EXIBE O CARDAPIO PELO ID
+
+    async getCardapio(request, response) {
+
+        const token = request.headers.authorization;
+
+        const user = await connection('usuario')
+            .where('token', token)
+            .select('*');
+
+
+        if(user[0]) {
+
+            const id = request.query.id;
+
+            const cardapio = await connection('menu')
+                .where('id', id)
+                .select('*');
+
+            return response.json({ cardapio });
+
+
+        } else {
+            return response.json({ status: false });
+        }
+
+
+        // const id = request.params.id;
+        
+
+
+
+        
+
     },
 
     // CRIA UM CARDAPIO
@@ -35,7 +72,7 @@ module.exports ={
 
             const usuario_id = user[0].id;
 
-            await connection('cardapio')
+            await connection('menu')
                 .insert({
                     nome,
                     descricao,

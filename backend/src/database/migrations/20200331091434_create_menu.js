@@ -1,16 +1,16 @@
 
 exports.up = function(knex) {
-    return knex.schema.createTable('cardapio', function (table) {
+    return knex.schema.createTable('menu', function (table) {
         table.increments();
         table.string('nome').notNullable();
         table.string('descricao').notNullable();
         table.dateTime('created_datetime').notNullable();
         table.dateTime('update_datetime').notNullable();
-        table.string('usuario_id').notNullable();
-        table.foreign('usuario_id').references('user_id').inTable('usuario');
+        table.integer('usuario_id').notNullable();
+        // table.foreign('id').references('usuario_id').inTable('usuario');
     });
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable('cardapio');
+    return knex.schema.dropTable('menu');
 };

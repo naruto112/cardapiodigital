@@ -17,6 +17,7 @@ routes.delete('/user/delete', User.delete);
 //ROUTE CARDAPIO
 routes.get('/cardapio/all', Cardapio.all)
 routes.post('/cardapio/create', Cardapio.create)
+routes.get('/cardapio', Cardapio.getCardapio);
 
 
 // routes.delete('/incidents/:id', IncidentController.delete)

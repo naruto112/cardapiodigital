@@ -4,7 +4,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Logon from './pages/Logon';
 import Register from './pages/Register';
 import Painel from './pages/Painel';
-import NewCardapio from './pages/NewCardapio'
+import Cardapio from './pages/Cardapio'
+import Produto from './pages/Produto'
 
 export default function Routes() {
     return(
@@ -13,7 +14,8 @@ export default function Routes() {
              <Route path="/" exact component={Logon} />
              <Route path="/painel" component={Painel} />
              <Route path="/register" component={Register} />
-             <Route path="/cardapio" component={NewCardapio} />
+             <Route path="/cardapio" component={Cardapio} />
+             <Route path="/produto/:id" component={Produto} />
          </Switch>
         </BrowserRouter>
     )
