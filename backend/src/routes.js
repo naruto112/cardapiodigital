@@ -1,7 +1,8 @@
 const express = require('express');
 
-const User = require('./controllers/User')
-const Cardapio = require('./controllers/Cardapio')
+const User = require('./controllers/User');
+const Cardapio = require('./controllers/Cardapio');
+const Produto = require('./controllers/Produto');
 
 const routes = express.Router();
 
@@ -16,12 +17,15 @@ routes.delete('/user/delete', User.delete);
 
 //ROUTE CARDAPIO
 routes.get('/cardapio/all', Cardapio.all)
-routes.post('/cardapio/create', Cardapio.create)
+routes.post('/cardapio/create', Cardapio.create);
 routes.get('/cardapio', Cardapio.getCardapio);
 
 
-// routes.delete('/incidents/:id', IncidentController.delete)
-
+//ROUTE PRODUTO
+routes.post('/produto/create', Produto.create);
+routes.get('/produto', Produto.allByid);
+routes.delete('/produto', Produto.delete);
+routes.put('/produto', Produto.update);
 
 
 module.exports = routes;

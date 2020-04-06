@@ -5,7 +5,7 @@ import api from '../../services/api'
 
 import './styles.css';
 
-// import logoImg from '../../assets/logo.svg';
+
 import cardapioImg from '../../assets/logo_menu.png';
 
 export default function Logon() {

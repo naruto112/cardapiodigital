@@ -14,8 +14,10 @@ module.exports ={
             .select('*');
 
         const cardapio = await connection('menu')
+            .groupBy('menu.id')
             .where('usuario_id', user[0].id)
-            .select('*');
+            .leftJoin('produto', {'menu.id': 'produto.menu_id'})
+            .select('menu.id','menu.nome', 'menu.descricao', 'menu.usuario_id', 'produto.nome as Produto');
 
         return response.json({ cardapio })
     },
@@ -34,7 +36,7 @@ module.exports ={
 
         if(user[0]) {
 
-            const id = request.query.id;
+            const { id } = request.query;
 
             const cardapio = await connection('menu')
                 .where('id', id)
@@ -46,13 +48,6 @@ module.exports ={
         } else {
             return response.json({ status: false });
         }
-
-
-        // const id = request.params.id;
-        
-
-
-
         
 
     },
