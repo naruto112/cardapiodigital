@@ -9,14 +9,14 @@ const routes = express.Router();
 
 //ROUTE USUARIO
 routes.post('/user/create', User.create);
-routes.post('/user/login', User.index);
+routes.post('/user/login', User.authentication);
 routes.get('/user/all', User.all);
 routes.put('/user/update', User.update);
 routes.delete('/user/delete', User.delete);
 
 
 //ROUTE CARDAPIO
-routes.get('/cardapio/all', Cardapio.all)
+routes.post('/cardapio/all', Cardapio.all)
 routes.post('/cardapio/create', Cardapio.create);
 routes.get('/cardapio', Cardapio.getCardapio);
 

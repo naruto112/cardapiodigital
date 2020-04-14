@@ -1,50 +1,58 @@
 const dateFormat = require('dateformat');
 const now = new Date();
 const crypto = require('crypto');
-const md5 = require('md5');
+const bcrypt = require ('bcrypt');
 const connection = require('../database/connection');
+const authConfig = require('../config/auth');
+const jwt = require('jsonwebtoken');
 
 
 module.exports = {
 
-    // EXIBE TODOS OS USUARIOS
-    async all (request, response) {
-        const token = request.headers.authorization;
-
-
-        const user = await  connection('usuario')
-            .where('token', token)
-            .select('*');
-
-        return response.json({ user })
-    },
-
-    // EXIBE UM USUARIO
-    async index (request, response) {
+    // LOGIN USUARIO
+    async authentication (request, response) {
 
         const { user, passwd } = request.body;
-        const password = md5(passwd);
 
         await connection('usuario')
-                .where({user, password})
-                .then(result => {
-                    return response.json({ result })
-                })
+        .where({ user })
+        .then(res => {
+
+            bcrypt.compare(passwd, res[0].password, function(err, result) {
+
+                if(result){
+                    
+                    const token = jwt.sign({ id: user[0].id }, authConfig.secret, {
+                        expiresIn: 86400,
+                    }) 
+
+                    return response.json({ res, token })   
+
+                } else {
+                    
+                    return response.status(400).send({ error: 'Invalid password'})
+
+                }
+                 
+            }); 
+            
+        })
     },
 
     // ATUALIZA UM USUARIO
     async update(request, response) {
 
         const token = request.headers.authorization;
-        const user = await  connection('usuario')
-            .where('token', token)
-            .select('*');
+        const valid = jwt.verify(token, authConfig.secret)
 
 
-        if(user.id) {
+        if(valid.id) {
+
             const { id, name, user, passwd, mail, phone } = request.body;
-            const password = md5(passwd);
+            const salt = bcrypt.genSaltSync(10);
+            const password = bcrypt.hashSync(passwd, salt);
             const update_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
+
             await connection('usuario')
                 .where({
                     id
@@ -56,40 +64,22 @@ module.exports = {
                     mail,
                     phone,
                     update_datetime,
-                });
+                }).then(res => {
+                    return response.json({ res, valid });
+                })
         }
+        
 
-        return response.json({ user });
-
-    },
-
-    // DELETE UM USUARIO
-    async delete(request, response) {
-
-        const token = request.headers.authorization;
-        const user = await  connection('usuario')
-            .where('token', token)
-            .select('*');
-
-        if(user.id) {
-
-            const { id } = request.body;
-            await connection('usuario')
-                .where({ id })
-                .del();
-
-            return response.json({ status: true });
-        }
     },
 
     // CRIA UM USUARIO
     async create( request, response) {
 
-        
 
             const { name, user, passwd, mail, phone } = request.body;
             const token = crypto.randomBytes(25).toString('HEX');
-            const password = md5(passwd);
+            const salt = bcrypt.genSaltSync(10);
+            const password = bcrypt.hashSync(passwd, salt);
             const created_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
             const update_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
 
@@ -108,7 +98,13 @@ module.exports = {
             return response.json({ status: true });
 
 
-    }
+    },
 
-    
+    // DELETE UM USUARIO
+    async delete(request, response) {
+    },
+
+    // EXIBE TODOS OS USUARIOS
+    async all (request, response) {
+    },
 }

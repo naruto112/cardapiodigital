@@ -2,11 +2,11 @@
     width: 100%;
     max-width: 1120px;
     height: 100vh;
-    margin: 120px auto;
     display: table;
     align-items: center;
     justify-content: center;
     margin-top: 18px;
+    margin-left: 2%;
 }
 
 .new-produto-container .content {
@@ -80,6 +80,7 @@
     line-height: 5;
     padding-left: 1%;
     color: #403d3e;
+    width: 600px;
     box-shadow: 0px 0px 4px rgba(9,12,11,0.5);
 }
 
@@ -118,8 +119,10 @@
     position: absolute;
     padding: 42px;
     border-radius: 8px;
-    margin-top: -28%;
+    margin-top: -48%;
+    margin-left: 21%;
     width: 1116px;
+    z-index: 1;
 }
 
 .fix-close {

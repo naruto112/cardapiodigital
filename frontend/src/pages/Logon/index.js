@@ -35,10 +35,11 @@ export default function Logon() {
                 passwd 
             });
 
-            const { result } = response.data;
+            const { res, token } = response.data;
 
-            localStorage.setItem('token', result[0].token);
-            localStorage.setItem('name', result[0].name);
+            localStorage.setItem('token', token);
+            localStorage.setItem('name', res[0].name);
+            localStorage.setItem('user_id', res[0].id);
             
             history.push('/painel');
 

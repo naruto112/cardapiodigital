@@ -9,7 +9,7 @@ export default function Footer(){
 
 
     return(
-        <footer className="page-footer font-small gray" style={{ backgroundColor: '#555', borderRadius: 4}}>
+        <footer className="page-footer font-small gray" style={{ backgroundColor: '#555', zIndex: 1 }}>
             <div className="footer-copyright text-center py-3">© 2020 Desenvolvimento by
                 <a href="https://mdbootstrap.com/"> DStudium.com</a>
             </div>

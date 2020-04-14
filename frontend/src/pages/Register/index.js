@@ -39,6 +39,7 @@ export default function Register() {
 
     }
 
+
     return(
         <div className="register-container">
             <div className="content">
@@ -48,7 +49,7 @@ export default function Register() {
                     <p>Faça seu cadastro, entre na plataforma e ajude pessoas a encontrarem os casos da sua ONG.</p>
                     <Link className="back-link" to="/">
                         <FiArrowLeft size={16} color="#E02041"/>
-                        Não tenho cadastro
+                        Voltar para o Login
                     </Link>
                 </section>
                 <form onSubmit={handleRegister} >
@@ -80,6 +81,7 @@ export default function Register() {
                             value={uf}
                             onChange={e => setUf(e.target.value)}
                             />
+                        
                     </div>
                     <button className="button" type="submit">Cadastrar</button>
                 </form>

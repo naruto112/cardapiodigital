@@ -1,5 +1,7 @@
 const connection = require('../database/connection');
 const dateFormat = require('dateformat');
+const authConfig = require('../config/auth');
+const jwt = require('jsonwebtoken');
 const now = new Date();
 
 
@@ -7,16 +9,24 @@ module.exports ={
 
     // CRIA UM PRODUTO RELACIONADO AO CARDAPIO
     async create (request, response) {
-        const { nome, descricao, valor, id } = request.body;
+        const { nome, descricao, valor, base64, id } = request.body;
         const token = request.headers.authorization;
+
         const created_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
         const update_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
 
-        const user = await  connection('usuario')
-                .where('token', token)
-                .select('*');
+        jwt.verify(token, authConfig.secret, function (err, decoded) {
+            
+            if(err) {
+                const { message } = err;
+                return response.json({ message })    
+            }
 
-        if(user[0]){
+            certisign = decoded;
+
+        });
+
+        if(certisign){
 
             const cardapio = await connection('menu')
                 .where('id', id)
@@ -29,6 +39,7 @@ module.exports ={
                     nome,
                     descricao,
                     valor,
+                    base64,
                     created_datetime,
                     update_datetime,
                     menu_id: cardapio_id,
@@ -46,11 +57,18 @@ module.exports ={
         const { id } = request.query;
         const token = request.headers.authorization;
 
-        const user = await connection('usuario')
-                .where('token', token)
-                .select('*');
+        jwt.verify(token, authConfig.secret, function (err, decoded) {
+            
+            if(err) {
+                const { message } = err;
+                return response.json({ message })    
+            }
 
-        if(user[0]) {
+            certisign = decoded;
+
+        });
+
+        if(certisign) {
 
             const produto = await  connection('produto')
                 .where('menu_id', id)
