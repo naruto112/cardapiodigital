@@ -23,7 +23,8 @@ export default function Header(){
 
     return(
         <div className="topnav">
-            <Link to="/painel">.Cardapio Digital</Link>
+            <Link to="/painel">Painel</Link>
+            <Link to="/cardapio">Gerar Cardápio</Link>
             <div className="login-container">
                 <input type="text" placeholder={name} name="username" disabled={true}/>
                 <button type="submit" onClick={handleLogout}> <FiLogOut size={14} style={{ marginLeft: 10}} color="#FFF"/></button>

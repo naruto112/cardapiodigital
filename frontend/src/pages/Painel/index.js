@@ -151,29 +151,30 @@ export default function Painel() {
                 <Loader type="ThreeDots" color="#555555" height={100} width={100} className="loader" visible={loader} />
             </div>
             <button onClick={() => setHidenCardapio(false)} className="painel-container-button" ><FiPlus size={15}/></button>
-            {/* <button onClick={() => setHidenProduto(false)}><FiPlus size={25}/> Produto</button> */}
-            <ul>
-            {cardapio.map(cardapio => (
-                <li key={cardapio.id}>
-                    <strong>NOME:</strong>
-                    <p>{cardapio.nome}</p>
+            <div className="scroll-cardapio">
+                <ul>
+                {cardapio.map(cardapio => (
+                    <li key={cardapio.id}>
+                        <strong>NOME:</strong>
+                        <p>{cardapio.nome}</p>
 
-                    <strong>DESCRIÇÃO:</strong>
-                    <p>{cardapio.descricao}</p>
+                        <strong>DESCRIÇÃO:</strong>
+                        <p>{cardapio.descricao}</p>
 
-                    <button className="btn-produto" onClick={() => OpenHandlerProduto(cardapio.id)} type="button">
-                        <FiPlus size={15} color="#a8a8b3" />
-                    </button>
-                    <button className="btn-trash" onClick={() => {}} type="button">
-                        <FiTrash2 size={15} color="#a8a8b3" />
-                    </button>
-                    <button className="btn-edit" onClick={() => getProduto(cardapio.id)} type="button">
-                        {cardapio.Produto === null? '': <FiEye size={15} color="#a8a8b3" />}
-                    </button>
-                    {cardapio.Produto === null? <span className="alert-danger"><FiAlertTriangle style={{ marginRight: 10}}/>N/Produto</span> : ''} 
-                </li>     
-            ))}
-            </ul>
+                        <button className="btn-produto" onClick={() => OpenHandlerProduto(cardapio.id)} type="button">
+                            <FiPlus size={15} color="#a8a8b3" />
+                        </button>
+                        <button className="btn-trash" onClick={() => {}} type="button">
+                            <FiTrash2 size={15} color="#a8a8b3" />
+                        </button>
+                        <button className="btn-edit" onClick={() => getProduto(cardapio.id)} type="button">
+                            {cardapio.Produto === null? '': <FiEye size={15} color="#a8a8b3" />}
+                        </button>
+                        {cardapio.Produto === null? <span className="alert-danger"><FiAlertTriangle style={{ marginRight: 10}}/>N/Produto</span> : ''} 
+                    </li>     
+                ))}
+                </ul>
+            </div>
             {/*---------------------------------------------------------------------------------------------------------------------------------------*/}
             <div className="content save-cardapio" hidden={hidenCardapio}>
                 <Link to="#" style={{ marginLeft: 800 }} onClick={() => setHidenCardapio(true)}>
@@ -226,9 +227,7 @@ export default function Painel() {
                         <button  className="button" type="submit">Incluir</button>
                     </div>  
                 </form>
-                <div style={{ width: 1200, marginLeft: 540, marginTop: -990, position: 'fixed'}}>
-                    <Produto params={dataProduto} />
-                </div>
+                <Produto params={dataProduto} />
             <Footer/>
         </div>
     );

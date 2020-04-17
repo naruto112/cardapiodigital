@@ -7,6 +7,7 @@ export default function Produto(props) {
     
     return(
         <div className="new-produto-container">
+            <div className="scroll-produto">
                 {props.params.map(produtos => (
                     <div key={produtos.id} className="produto-ul">
                         <li className="grid">
@@ -17,6 +18,7 @@ export default function Produto(props) {
                         </li>
                     </div>
                 ))}
+            </div>
         </div>
     );
 }

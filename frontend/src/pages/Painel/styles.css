@@ -135,10 +135,11 @@
     right: 80px;
 }
 .save-cardapio {
+    z-index: 1;
     background: #FFF;
-    position: absolute;
-    margin-top: -20%;
-    margin-left: 7%;
+    position: fixed;
+    margin-left: 25%;
+    margin-top: 10%;
     padding: 45px;
     border-radius: 11px;
     box-shadow: 2px 2px 23px 1250px rgba(0, 0, 0, 0.2);
@@ -174,6 +175,23 @@
 .loader {
     position: absolute;
     margin-top: 350px;
-    margin-left: 750px;
+    margin-left: 900px;
     z-index: 1;
+}
+
+.scroll-cardapio {
+    cursor: pointer;
+    margin-top: 1%;
+    margin-bottom: 3%;
+    position: fixed;
+    width: 550px;
+    height:85vh;
+    left: 0;
+    right: 0;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    display: none;
 }
