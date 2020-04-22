@@ -1,3 +1,31 @@
 .top {
     margin-top: 15%;
 }
+
+.alert-sucesso {
+    width: 100%;
+    text-align: center;
+    margin-top: 4%;
+}
+
+.content-sucess {
+    width: 100%;
+    text-align: center;
+}
+
+.alert-sucesso span {
+    margin-left: 1%;
+    color: #439a33;
+}
+
+.alert-sucesso svg {
+    color: #439a33;
+}
+
+.link {
+    width: 100%;
+    text-align: center;
+    margin-top: 2%;
+    font-style: italic;
+    color: #656363;
+}

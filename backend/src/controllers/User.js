@@ -26,7 +26,7 @@ module.exports = {
                         expiresIn: 86400,
                     }) 
 
-                    return response.json({ res, token })   
+                    return response.status(200).json({ res, token })   
 
                 } else {
                     
@@ -95,7 +95,7 @@ module.exports = {
                     update_datetime,
                 });
 
-            return response.json({ status: true });
+            return response.status(200).json({ status: true });
 
 
     },

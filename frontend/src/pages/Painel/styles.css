@@ -60,6 +60,7 @@
 }
 
 .painel-container ul li {
+    width: 128%;
     background: #FFF;
     padding: 8px;
     border-radius: 3px;

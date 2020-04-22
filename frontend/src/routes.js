@@ -5,8 +5,8 @@ import Logon from './pages/Logon';
 import Register from './pages/Register';
 import Painel from './pages/Painel';
 import Cardapio from './pages/Cardapio'
-
 import Produto from './pages/Produto'
+import Loja from './pages/Loja'
 
 export default function Routes() {
     return(
@@ -17,6 +17,7 @@ export default function Routes() {
              <Route path="/register" component={Register} />
              <Route path="/produto/:id" component={Produto} />
              <Route path="/cardapio" component={Cardapio} />
+             <Route path="/loja/:name" component={Loja} />
          </Switch>
         </BrowserRouter>
     )

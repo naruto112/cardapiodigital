@@ -6,10 +6,10 @@ module.exports = {
     client: 'mysql',
     version: '5.6',
     connection: {
-      host : 'ec2-18-221-220-204.us-east-2.compute.amazonaws.com',
-      user : 'renato_souza',
-      password : 'Moschetta@18',
-      database : 'caradapiodigital'
+      host : '192.168.64.2',
+      user : 'root',
+      password : 'd26m06',
+      database : 'cardapiodigital'
     },
     debug: true,
     pool: {

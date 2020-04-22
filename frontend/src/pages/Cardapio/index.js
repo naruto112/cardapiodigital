@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
+import { FiCheckCircle } from 'react-icons/fi'
 import { 
     MDBContainer, 
     MDBRow, 
@@ -24,7 +25,11 @@ export default function Cardapio(){
 
     const [cardapio, setCardapio] = useState([]);
     const [selected, setSelected] = useState('');
+    const [response, setResponse] = useState('');
+    const [hidden, setHidden] = useState(true);
     const [url, setURL] = useState('');
+
+    const url_atual = `${window.location.protocol}//${window.location.host}`;
 
     useEffect(() => {
         if (token) {
@@ -43,7 +48,7 @@ export default function Cardapio(){
                 headers: {
                     Authorization: token,
                 }
-            }).then(response =>{
+            }).then(response => {
                 setCardapio(response.data.cardapio);
             })
 
@@ -52,10 +57,23 @@ export default function Cardapio(){
 
     }, [token, history, id]);
 
-    function handleSubmit(e){
+    async function handleSubmit(e){
         e.preventDefault();
 
-        console.log(selected);
+        let domain = url.replace(/\s/g, '');
+        domain = domain.toLowerCase();
+
+        const data = { idCardapio: selected, domain};
+
+        await api.post('cardapio/generated', data, {
+            headers: {
+                Authorization: token,
+            }
+        }).then(response => {
+            setHidden(false);
+            setResponse(response.data)
+        })
+
     }
 
     return(
@@ -73,13 +91,21 @@ export default function Cardapio(){
                             <option key={cardapio.id} value={cardapio.id}>{cardapio.nome}</option>
                         ))}
                     </select>
-                    <MDBInput label="Digite o nome para sua URL" group type="text" />
+                    <MDBInput label="Digite o nome para sua URL" type="text" onChange={e => setURL(e.target.value)}/>
                     </div>
                     <div className="text-center">
                     <MDBBtn color="dark" type="submit">SALVAR</MDBBtn>
                     </div>
                 </form>
                 </MDBCol>
+                <div hidden={hidden} className="content-sucess">
+                    <div className="alert-sucesso">
+                        <FiCheckCircle size={18}/><span>Criado com sucesso</span>
+                    </div>
+                    <div className="link">
+                            <label>Envie esse link para seus clientes: <Link to={`/loja/${response.domain}`}>{url_atual}/loja/{response.domain}</Link></label>
+                    </div>
+                </div>
             </MDBRow>
             </MDBContainer>
             <Footer />  

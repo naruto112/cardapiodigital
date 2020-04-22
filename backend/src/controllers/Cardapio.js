@@ -2,6 +2,7 @@ const connection = require('../database/connection');
 const dateFormat = require('dateformat');
 const authConfig = require('../config/auth');
 const jwt = require('jsonwebtoken');
+const cryptoRandomString = require('crypto-random-string');
 const now = new Date();
 
 
@@ -17,7 +18,7 @@ module.exports ={
             
             if(err) {
                 const { message } = err;
-                return response.json({ message })    
+                return response.status(200).json({ message })    
             }
 
             certisign = decoded;
@@ -34,12 +35,11 @@ module.exports ={
                 .leftJoin('produto', {'menu.id': 'produto.menu_id'})
                 .select('menu.id','menu.nome', 'menu.descricao', 'menu.usuario_id', 'produto.nome as Produto');
 
-            return response.json({ cardapio })
+            return response.status(200).json({ cardapio })
             
         }
         
     },
-
 
     // EXIBE O CARDAPIO PELO ID
 
@@ -65,11 +65,11 @@ module.exports ={
                     .where('id', id)
                     .select('*');
 
-                return response.json({ cardapio });
+                return response.status(200).json({ cardapio });
 
 
             } else {
-                return response.json({ status: false });
+                return response.status(200).json({ status: false });
             }
         }
         
@@ -77,20 +77,26 @@ module.exports ={
     },
 
     // CRIA UM CARDAPIO
-    async create( request, response) {
+    async create(request, response) {
 
-        const { nome, descricao } = request.body;
+        const { nome, descricao, id } = request.body;
         const token = request.headers.authorization;
         const created_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
         const update_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
 
-        if(token){
 
-            const user = await  connection('usuario')
-                .where('token', token)
-                .select('*');
+        jwt.verify(token, authConfig.secret, function (err, decoded) {
+            
+            if(err) {
+                const { message } = err;
+                return response.status(200).json({ message })    
+            }
 
-            const usuario_id = user[0].id;
+            certisign = decoded;
+
+        });
+
+        if(certisign){
 
             await connection('menu')
                 .insert({
@@ -98,13 +104,71 @@ module.exports ={
                     descricao,
                     created_datetime,
                     update_datetime,
-                    usuario_id
+                    usuario_id: id
                 });
 
-            return response.json({ status: true });
+                const crypto = cryptoRandomString({length: 10});
+
+            return response.status(200).json({ nome, descricao, id: crypto });
         } else {
-            return response.json({ status: 'notfound token' });
+            return response.status(200).json({ status: 'notfound token' });
         }
+
+    },
+
+    async generatedCardapio(request, response) {
+
+        const { idCardapio, domain } = request.body;
+        const created_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
+        const update_datetime = dateFormat(now, "yyyy-mm-dd HH:MM:ss");
+        const token = request.headers.authorization;
+
+        const valid = jwt.verify(token, authConfig.secret);
+
+
+        if(valid) {
+
+            await connection('generated_cardapio')
+                .insert({
+                    domain,
+                    menu_id: idCardapio,
+                    created_datetime,
+                    update_datetime
+                });
+            
+            return response.status(200).json({ idCardapio, domain });
+
+        } else {
+
+            return response.status(200).json({ status: "Token Invalid" });
+
+        }
+
+    },
+
+    async menuLoja(request, response) {
+
+        const { name } = request.params
+        const token = request.headers.authorization;
+
+        const valid = jwt.verify(token, authConfig.secret);
+
+        if(valid) {
+
+            const loja = await connection('generated_cardapio')
+                .where('domain', name)
+                .join('menu', {'generated_cardapio.menu_id': 'menu.id'})
+                .join ('produto', {'menu.id': 'produto.menu_id'})
+                .select('produto.id', 'produto.nome', 'produto.descricao', 'produto.valor', 'produto.base64');
+
+            return response.status(200).json({ loja });
+
+        } else {
+
+            return response.status(200).json({ status: "Token Invalid" });
+
+        }
+        
 
     }
 

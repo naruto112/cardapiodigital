@@ -1,7 +1,10 @@
 const connection = require('../database/connection');
 const dateFormat = require('dateformat');
+const crypto = require('crypto')
 const authConfig = require('../config/auth');
 const jwt = require('jsonwebtoken');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk')
 const now = new Date();
 
 
@@ -19,7 +22,7 @@ module.exports ={
             
             if(err) {
                 const { message } = err;
-                return response.json({ message })    
+                return response.status(200).json({ message })    
             }
 
             certisign = decoded;
@@ -34,20 +37,41 @@ module.exports ={
 
             const cardapio_id = cardapio[0].id;
 
+            const base64Data = new Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+            const type = base64.split(';')[0].split('/')[1];
+
+            const s3 = new aws.S3();
+
+            const buf = crypto.randomBytes(16);  
+            const filename = `${buf.toString('hex')}_image.${type}`
+
+            //ARMAZENA NA AWS S3
+            const params = {
+                Bucket: 'cardapiodigital',
+                Key: filename,
+                Body: base64Data,
+                ACL: 'public-read',
+                ContentEncoding: 'base64',
+                ContentType: `image/${type}`,
+              }
+
+            const { Location } = await s3.upload(params).promise();       
+
+
             const produto = await connection('produto')
                 .insert({
                     nome,
                     descricao,
                     valor,
-                    base64,
+                    base64: Location,
                     created_datetime,
                     update_datetime,
                     menu_id: cardapio_id,
                 });
 
-            return response.json({ id: produto[0], nome, descricao, valor });
+            return response.status(200).json({ id: produto[0], nome, descricao, valor });
         } else {
-            return response.json({ status: 'notfound token' });
+            return response.status(200).json({ status: 'notfound token' });
         }
     },
 
@@ -61,7 +85,7 @@ module.exports ={
             
             if(err) {
                 const { message } = err;
-                return response.json({ message })    
+                return response.status(200).json({ message })    
             }
 
             certisign = decoded;
@@ -75,9 +99,9 @@ module.exports ={
                 .select('*');
 
 
-            return response.json({ produto });
+            return response.status(200).json({ produto });
         } else {
-            return response.json({ status: 'notfound token' });
+            return response.status(200).json({ status: 'notfound token' });
         }
 
 
@@ -99,9 +123,9 @@ module.exports ={
                     .where({ id })
                     .del()
             
-            return response.json({ produto });
+            return response.status(200).json({ produto });
         } else {
-            return response.json({ status: 'notfound token' });
+            return response.status(200).json({ status: 'notfound token' });
         }
 
 
@@ -130,10 +154,10 @@ module.exports ={
                         update_datetime, 
                     });
 
-            return response.json({ produto });
+            return response.status(200).json({ produto });
 
         } else {
-            return response.json({ status: 'notfound token' });
+            return response.status(200).json({ status: 'notfound token' });
         }
         
     }

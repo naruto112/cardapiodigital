@@ -74,7 +74,7 @@
 .grid {
     background: #FFF;
     display: grid;
-    height: 138px;
+    height: 168px;
     margin-top: 3px;
     border-radius: 8px;
     line-height: 5;
@@ -85,15 +85,15 @@
 }
 
 .img-produto {
-    width: 122px;
-    height: 122px;
+    width: 152px;
+    height: 152px;
     margin-top: 8px;
     border-radius: 5px;
 }
 
 .name-produto {
     font-weight: bolder;
-    margin-left: 153px;
+    margin-left: 170px;
     position: absolute;
     font-size: 15px;
 }
@@ -102,14 +102,14 @@
     margin-top: 20px;
     font-weight: 300;
     color: #696969;
-    margin-left: 153px;
+    margin-left: 170px;
     position: absolute;
 }
 
 .price-produto {
     margin-top: 40px;
     font-weight: bolder;
-    margin-left: 153px;
+    margin-left: 170px;
     position: absolute;
     font-size: 15px;
 }

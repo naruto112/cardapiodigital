@@ -1,0 +1,47 @@
+.titulo-cardapio {
+    margin-left: 1%;
+    position: absolute;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.loading {
+    margin-left: 45%;
+}
+
+.logo {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 35%;
+    width: 100%;
+    /* text-align: center;  */
+}
+
+.logo div {
+    border-radius: 5px;
+    width: 25%;
+    padding: 0.5%;
+    background-color: #FFF;
+    margin-top: 1%;
+    box-shadow: 1px 0px 10px -2px rgba(0, 0, 0, 0.2);
+    transition: box-shadow .5s;
+    cursor: pointer;
+}
+
+.logo div:hover {
+    box-shadow: 1px 0px 20px -3px rgba(0, 0, 0, 0.2);
+}
+
+.logo img {
+    box-shadow: 1px 0px 5px -3px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.logo span {
+    width: 100%;
+    font-size: 12px;
+    display: grid;
+    position: absolute;
+    margin-top: -5%;
+    margin-left: 7%;
+}

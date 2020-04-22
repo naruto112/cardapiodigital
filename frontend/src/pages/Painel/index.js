@@ -55,6 +55,10 @@ export default function Painel() {
                     Authorization: token,
                 }
             }).then(response =>{
+                if(response.data.message === 'jwt expired') {
+                    localStorage.clear();
+                    history.push('/');
+                }
                 setCardapio(response.data.cardapio);
             })
 
@@ -65,19 +69,27 @@ export default function Painel() {
 
 
     async function CadastrarCardapio(e) {
+
+
         const token = localStorage.getItem('token');
         e.preventDefault();
 
         const data = {
+            id,
             nome: nomeCardapio,
             descricao: descricaoCardapio,
         }
+        
+
 
         await api.post('cardapio/create', data, {
                 headers: {
                     Authorization: token,
             }
         }).then(response => {
+            console.log(response)
+            setHidenCardapio(true);
+            cardapio.push(response.data);
             history.push('/painel');
         })
     }
@@ -93,6 +105,8 @@ export default function Painel() {
                 id: idCardapio,
                 base64: imgProduto
             }
+
+            console.log(data)
 
             await api.post('produto/create', data, {
                 headers: {
@@ -182,9 +196,9 @@ export default function Painel() {
                 </Link>
                 <form onSubmit={CadastrarCardapio}> 
                     <input 
-                    placeholder="Nome do cardápio" 
-                    value={nomeCardapio}
-                    onChange={e => setNomeCardapio(e.target.value)}
+                        placeholder="Nome do cardápio" 
+                        value={nomeCardapio}
+                        onChange={e => setNomeCardapio(e.target.value)}
                     />
                     <textarea 
                         placeholder="Descrição do Cardápio"
