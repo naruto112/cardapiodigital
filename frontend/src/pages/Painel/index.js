@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom'
-import { FiTrash2, FiPlus, FiSave, FiX, FiAlertTriangle, FiXCircle, FiEye} from 'react-icons/fi'
+import { useHistory } from 'react-router-dom'
+import { FiTrash2, FiPlus, FiAlertTriangle, FiEye} from 'react-icons/fi'
 import Loader from 'react-loader-spinner'
+import { 
+    MDBBtn,
+    MDBInput,
+    MDBModal, 
+    MDBModalBody, 
+    MDBModalHeader, 
+    MDBModalFooter
+} from 'mdbreact';
 
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
@@ -22,8 +30,8 @@ export default function Painel() {
     const [loader, setLoader] = useState(false);
 
     const [cardapio, setCardapio] = useState([]);
-    const [hidenCardapio, setHidenCardapio] = useState(true);
-    const [hidenProduto, setHidenProduto] = useState(true);
+    const [modalCard, setModalCard] = useState(false);
+    const [modal, setModal] = useState(false);
     const [nomeCardapio, setNomeCardapio] = useState('');
     const [descricaoCardapio, setDescricaoCardapio] = useState('');
 
@@ -38,6 +46,7 @@ export default function Painel() {
     const history = useHistory();
 
     useEffect(() => {
+        //VERIFICA SE O MESMO ESTA LOGADO PARA VALIDAR A PAGINA
         if (token) {
             localStorage.setItem('login', true);
             getAll();
@@ -70,7 +79,6 @@ export default function Painel() {
 
     async function CadastrarCardapio(e) {
 
-
         const token = localStorage.getItem('token');
         e.preventDefault();
 
@@ -87,8 +95,7 @@ export default function Painel() {
                     Authorization: token,
             }
         }).then(response => {
-            console.log(response)
-            setHidenCardapio(true);
+            setModalCard(false);
             cardapio.push(response.data);
             history.push('/painel');
         })
@@ -106,14 +113,12 @@ export default function Painel() {
                 base64: imgProduto
             }
 
-            console.log(data)
-
             await api.post('produto/create', data, {
                 headers: {
                     Authorization: token
                 }
             }).then(response => {
-                setHidenProduto(true);
+                if(response) setModal(false);
             })
 
     }
@@ -146,7 +151,7 @@ export default function Painel() {
 
     async function OpenHandlerProduto(id) {
         setIdCardapio(id);
-        setHidenProduto(false);
+        setModal(true);
     }
 
 
@@ -164,7 +169,7 @@ export default function Painel() {
             <div className="painel-container-add">
                 <Loader type="ThreeDots" color="#555555" height={100} width={100} className="loader" visible={loader} />
             </div>
-            <button onClick={() => setHidenCardapio(false)} className="painel-container-button" ><FiPlus size={15}/></button>
+            <button onClick={() => setModalCard(true)} className="painel-container-button" ><FiPlus size={15}/></button>
             <div className="scroll-cardapio">
                 <ul>
                 {cardapio.map(cardapio => (
@@ -189,60 +194,64 @@ export default function Painel() {
                 ))}
                 </ul>
             </div>
-            {/*---------------------------------------------------------------------------------------------------------------------------------------*/}
-            <div className="content save-cardapio" hidden={hidenCardapio}>
-                <Link to="#" style={{ marginLeft: 800 }} onClick={() => setHidenCardapio(true)}>
-                    <FiX size={15} color="#272727"/>
-                </Link>
-                <form onSubmit={CadastrarCardapio}> 
-                    <input 
-                        placeholder="Nome do cardápio" 
-                        value={nomeCardapio}
-                        onChange={e => setNomeCardapio(e.target.value)}
-                    />
-                    <textarea 
-                        placeholder="Descrição do Cardápio"
-                        value={descricaoCardapio}
-                        onChange={e => setDescricaoCardapio(e.target.value)}
-                    />                    
-                    <button className="button" type="submit"><FiSave size={18} color="#FFF"/> Gravar</button>
-                </form>
-            </div>
-                <form onSubmit={CadastrarProduto} hidden={hidenProduto}>
-                    <div className="form-produto">
-                        <Link to="#" className="fix-close" onClick={() => setHidenProduto(true)}>
-                            <FiXCircle size={20} color="#272727"/>
-                        </Link>
-                        <input 
-                            value={idCardapio} 
-                            onChange={() => setIdCardapio(cardapio.nome)}                            
-                            hidden
-                        />
-                        <input 
-                            placeholder="Nome do Produto" 
-                            value={nomeProduto}
-                            onChange={e => setNomeProduto(e.target.value)}
-                        />
-                        <textarea 
-                            placeholder="Descrição do Produto" 
-                            value={descProduto}
-                            onChange={e => setDescProduto(e.target.value)}
-                        />
-                        <input 
-                            placeholder="R$ 0,00" 
-                            value={valorProduto}
-                            onChange={e => setValorProduto(e.target.value)}
-                        />
-                        <input 
-                            type="file" 
-                            style={{ border: 'none', marginTop: 30, marginLeft: -22}}
-                            onChange={onChange}
-                        />
-                        <button  className="button" type="submit">Incluir</button>
-                    </div>  
-                </form>
+            {/*---------------------------------------------------- MODAL ----------------------------------------------------------------------------------*/}
+                <MDBModal isOpen={modalCard} toggle={() => setModalCard(false)} className="top">
+                    <MDBModalHeader toggle={() => setModalCard(false)}>Adicionar Cardápio</MDBModalHeader>
+                    <MDBModalBody>
+                        <form onSubmit={CadastrarCardapio}>
+                            <div className="grey-text">
+                            <MDBInput 
+                                label="Nome do cardápio" 
+                                group type="text" 
+                                onChange={e => setNomeCardapio(e.target.value)}
+                            />
+                            <MDBInput 
+                                label="Descrição do Cardápio" 
+                                group type="text" 
+                                onChange={e => setDescricaoCardapio(e.target.value)} 
+                            />
+                            </div>
+                            <MDBModalFooter className="bar-footer" >
+                                <MDBBtn color="dark" type="submit">Incluir</MDBBtn>
+                            </MDBModalFooter>
+                        </form>
+                    </MDBModalBody>
+                </MDBModal>    
+                {/*---------------------------------------------------------------------------------------------------------------------------------------*/}
+                <MDBModal isOpen={modal} toggle={() => setModal(false)} className="top">
+                    <MDBModalHeader toggle={() => setModal(false)}>Adicionar Produto</MDBModalHeader>
+                    <MDBModalBody>
+                        <form onSubmit={CadastrarProduto}>
+                            <div className="grey-text">
+                            <MDBInput 
+                                label="Nome do Produto" 
+                                group type="text" 
+                                onChange={e => setNomeProduto(e.target.value)}
+                            />
+                            <MDBInput 
+                                label="Descrição do Produto" 
+                                group type="text" 
+                                onChange={e => setDescProduto(e.target.value)} 
+                            />
+                            <MDBInput 
+                                label="R$ 0,00" 
+                                group type="text" 
+                                onChange={e => setValorProduto(e.target.value)}
+                            />
+                            <MDBInput 
+                                group type="file" 
+                                onChange={onChange}
+                            />
+                            </div>
+                            <MDBModalFooter className="bar-footer" >
+                                <MDBBtn color="dark" type="submit">Incluir</MDBBtn>
+                            </MDBModalFooter>
+                        </form>
+                    </MDBModalBody>
+                </MDBModal>    
                 <Produto params={dataProduto} />
             <Footer/>
         </div>
     );
 }
+

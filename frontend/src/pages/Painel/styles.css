@@ -196,3 +196,7 @@
     width: 12px;
     display: none;
 }
+
+.bar-footer {
+    border-top: 1px solid #ffffff;
+}

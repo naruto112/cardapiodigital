@@ -1,9 +1,8 @@
 const connection = require('../database/connection');
 const dateFormat = require('dateformat');
-const crypto = require('crypto')
+const crypto = require('crypto');
 const authConfig = require('../config/auth');
 const jwt = require('jsonwebtoken');
-const multerS3 = require('multer-s3');
 const aws = require('aws-sdk')
 const now = new Date();
 
@@ -94,10 +93,9 @@ module.exports ={
 
         if(certisign) {
 
-            const produto = await  connection('produto')
+            const produto = await connection('produto')
                 .where('menu_id', id)
                 .select('*');
-
 
             return response.status(200).json({ produto });
         } else {
@@ -106,6 +104,22 @@ module.exports ={
 
 
     },
+
+    // EXIBE O PRODUTO GET BY ID
+
+    async produtoByid (request, response) {
+
+        const { id } = request.params;
+              
+
+        const produto = await connection('produto')
+            .where('id', id)
+            .select('*');
+
+        return response.status(200).json({ produto });
+
+    },
+
 
     //DELETA O PRODUTO 
     async delete (request, response) {

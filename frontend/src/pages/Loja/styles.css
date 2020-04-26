@@ -1,28 +1,29 @@
 .titulo-cardapio {
     margin-left: 1%;
-    position: absolute;
     font-size: 50px;
     font-weight: bold;
 }
 
 .loading {
-    margin-left: 45%;
+    position: absolute;
+    margin-left: 42%;
+    margin-top: 15%;
 }
 
 .logo {
-    margin-top: 2%;
-    margin-bottom: 2%;
-    margin-left: 35%;
-    width: 100%;
-    /* text-align: center;  */
+    display: flex;
+    width: 70%;
+    flex-wrap: wrap;
+    margin-bottom: 4%;
 }
 
 .logo div {
     border-radius: 5px;
-    width: 25%;
+    width: 30%;
     padding: 0.5%;
     background-color: #FFF;
-    margin-top: 1%;
+    margin-top: 2%;
+    margin-left: 1%;
     box-shadow: 1px 0px 10px -2px rgba(0, 0, 0, 0.2);
     transition: box-shadow .5s;
     cursor: pointer;
@@ -35,13 +36,227 @@
 .logo img {
     box-shadow: 1px 0px 5px -3px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .logo span {
-    width: 100%;
     font-size: 12px;
     display: grid;
     position: absolute;
     margin-top: -5%;
     margin-left: 7%;
+}
+
+.logo.price {
+    margin-left: 0%;
+    font-size: 15px;
+    margin-top: 1.5%;
+    cursor: pointer;
+}
+
+.form-pedido {
+    width: 200px;
+}
+
+.notation {
+    z-index: 1;
+    position: fixed;
+    left: 72%;
+}
+
+.notation span {
+    font-size: 24px
+}
+
+.restaurant-line {
+    margin-top: 13%;
+    width: 190%;
+    border-top: #dcdcdc solid 1px;
+    padding: 12px 0 16px;
+
+}
+
+.pedido-note {
+    width: 100%;
+    display: flex;
+    font-size: 16px;
+}
+.pedido-note div {
+    flex-grow: 1;
+}
+
+.pedido-note label {
+    font-weight: 900;
+    min-width: 30px;
+    text-align: right;
+}
+
+.sub-total {
+    display: flex;
+    width: 190%;
+    font-size: 16px;
+    color: #717171;
+}
+
+.sub-total div {
+    flex-grow: 1;
+}
+
+.sub-total label {
+    font-weight: 900;
+    min-width: 30px;
+    text-align: right;
+    cursor: pointer;
+}
+
+
+.taxa-entrega {
+    display: flex;
+    width: 190%;
+    font-size: 16px;
+    color: #717171;
+}
+
+.taxa-entrega div {
+    flex-grow: 1;
+}
+
+.taxa-entrega label {
+    color: #50a773;
+    font-weight: 900;
+    min-width: 30px;
+    text-align: right;
+    cursor: pointer;
+}
+
+
+.total {
+    display: flex;
+    width: 190%;
+    font-size: 16px;
+}
+
+.total div {
+    flex-grow: 1;
+}
+
+.total label {
+    font-weight: 900;
+    min-width: 30px;
+    text-align: right;
+    cursor: pointer;
+}
+
+.btn-pedido {
+    width: 185%;
+}
+
+.dish-content__img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 3px;
+}
+
+.produto-image {
+    width: 30%;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.title-product span{
+    margin-top: 6%;
+    font-size: 20px;
+    font-weight: 700;
+    display: grid;
+}
+
+.title-product label {
+    font-size: 12px;
+    color: #717171;
+    margin-top: 2%;
+}
+
+.title-product div {
+    font-size: 16px;
+}
+
+.dish-observation-form__textarea {
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+    background-color: #fff;
+    margin-top: 2%;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    color: #717171;
+    font-weight: 400;
+    resize: none;
+    height: calc(3.2em + 20px);
+    min-height: calc(3.2em + 20px);
+    padding: 10px;
+}
+
+.dish-observation-form__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0 10px;
+}
+
+.dish-observation-form__label {
+    margin: 0;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #717171;
+}
+
+.dish-observation-form__counter {
+    color: #a6a6a6;
+    font-weight: 100;
+    font-size: 0.875rem;
+}
+
+.dish-action__add-button {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    font-size: 0.875rem;
+}
+
+.dish-action__counter {
+    display: inline-flex;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    margin-right: 10px;
+    align-items: center;
+}   
+
+.dish-action__counter button{
+    padding: 12px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+
+.sacola {
+    position: absolute;
+    margin-left: 71%;
+    margin-top: 10%;
+}
+
+.marmita-counter {
+    display: flex;
+    align-items: center;
+}
+
+.top {
+    margin-top: 2%;
 }

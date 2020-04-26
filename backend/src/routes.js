@@ -26,6 +26,7 @@ routes.get('/cardapio/loja/:name', Cardapio.menuLoja)
 //ROUTE PRODUTO
 routes.post('/produto/create', Produto.create);
 routes.get('/produto', Produto.allByid);
+routes.get('/produto/:id', Produto.produtoByid);
 routes.delete('/produto', Produto.delete);
 routes.put('/produto', Produto.update);
 
