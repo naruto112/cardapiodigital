@@ -44,7 +44,7 @@ export default function Cardapio(){
 
             const data = { id }        
 
-            await api.post('cardapio/all', data, {
+            await api.post('cardapio/allbyproduct', data, {
                 headers: {
                     Authorization: token,
                 }

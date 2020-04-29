@@ -16,7 +16,8 @@ routes.delete('/user/delete', User.delete);
 
 
 //ROUTE CARDAPIO
-routes.post('/cardapio/all', Cardapio.all)
+routes.post('/cardapio/all', Cardapio.all);
+routes.post('/cardapio/allbyproduct', Cardapio.allByProduct);
 routes.post('/cardapio/create', Cardapio.create);
 routes.get('/cardapio', Cardapio.getCardapio);
 routes.post('/cardapio/generated', Cardapio.generatedCardapio);
