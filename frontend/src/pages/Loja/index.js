@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import {
   MDBBtn,
   MDBContainer,
@@ -6,13 +7,14 @@ import {
   MDBModalBody,
   MDBModalHeader,
   MDBModalFooter,
+  MDBInput,
 } from "mdbreact";
 import Footer from "../Footer";
 
 import "./styles.css";
 import Loader from "react-loader-spinner";
 import ImageSacola from "../../assets/sacola_vazia.png";
-
+import { maskCpf } from "../../config/mask";
 import api from "../../services/api";
 
 export default function Loja(props) {
@@ -23,6 +25,14 @@ export default function Loja(props) {
   const [count, setCount] = useState(1);
   const [loader, setLoader] = useState(false);
   const [modal, setModal] = useState(false);
+  const [cpfMask, setCpfMask] = useState("");
+  const [nomeCliente, setCliente] = useState("");
+  const [selected, setSelected] = useState("");
+  const [selectedTroco, setSelectedTroco] = useState("");
+  const [delivery, setDelivery] = useState("");
+  const [troco, setTroco] = useState(true);
+  const [valorTroco, setValorTroco] = useState("");
+  const [modalpedido, setModalPedido] = useState(false);
   const [pedido, setPedido] = useState([]);
   const [detail, setDetail] = useState("");
   let [idPedido, setIdPedido] = useState(10);
@@ -66,26 +76,96 @@ export default function Loja(props) {
 
     setIdPedido(idPedido + 1);
     pedido.push({ produto: { idPedido, name, count, detail, value } });
-    console.log(pedido);
     setCount(1);
     setTotalvalor(0);
     setModal(false);
+    setDetail("");
   }
 
   function handleClosedPedido(e) {
     e.preventDefault();
+    setModalPedido(true);
+  }
 
-    // const phone = 5511987474136;
+  function handlePedidoSend() {
+    const data = [];
 
-    // let cupomFiscal =
-    //   "*CardapioDigital - Novo pedido*\n ----------------------\n *1x Burger Angus* R$ 16,20";
+    const dNow = new Date();
+    const localdate =
+      dNow.getDate() +
+      "/" +
+      (dNow.getMonth() + 1) +
+      "/" +
+      dNow.getFullYear() +
+      " " +
+      dNow.getHours() +
+      ":" +
+      dNow.getMinutes();
 
-    // window.encodeURIComponent(cupomFiscal);
+    data.push(pedido);
+    data.push({ total: totalPedido });
+    if (!cpfMask) {
+      alert("Coloque o CPF");
+      return false;
+    }
+    data.push({ cpf: cpfMask });
 
-    // window.open(
-    //   "https://web.whatsapp.com/send?phone=" + phone + "&text=" + cupomFiscal,
-    //   "_blank"
-    // );
+    if (!selected) {
+      alert("Escolha a Forma de Pagamento");
+      return false;
+    }
+    if (selected === "Dinheiro") {
+      data.push({ formPgto: selected });
+      data.push({ troco: selectedTroco });
+    } else {
+      data.push({ formPgto: selected });
+    }
+
+    console.log(data[0]);
+
+    const phone = 5511987474136;
+    let cupomFiscal = "";
+    cupomFiscal += `*CardapioDigital - Novo pedido* %0A`;
+    cupomFiscal += `----------------------------------------------- %0A`;
+    data[0].map((note) => {
+      cupomFiscal += `*${note.produto.count}x ${note.produto.name}* R$ ${note.produto.value} %0A`;
+      cupomFiscal += `- Obs: ${
+        note.produto.detail === "" ? "nenhuma" : note.produto.detail
+      } %0A`;
+      cupomFiscal += `%0A`;
+    });
+    cupomFiscal += `*Total: R$ ${data[1].total}* %0A`;
+    cupomFiscal += `----------------------------------------------- %0A`;
+    cupomFiscal += `*Entrega ou Retirada?* %0A`;
+    cupomFiscal += `${delivery} %0A`;
+    cupomFiscal += `*Como você vai pagar?* %0A`;
+    cupomFiscal += `${data[3].formPgto} %0A`;
+    if (selectedTroco) {
+      cupomFiscal += `*Troco para quanto?* %0A`;
+      cupomFiscal += `R$ ${valorTroco} %0A`;
+    }
+    cupomFiscal += `*Nome* %0A`;
+    cupomFiscal += `${nomeCliente} %0A`;
+    cupomFiscal += `*CPF* %0A`;
+    cupomFiscal += `${data[2].cpf} %0A`;
+    cupomFiscal += `_Pedido recebido pelo Cardápio Digital às ${localdate}_ %0A`;
+
+    window.encodeURIComponent(cupomFiscal);
+    window.open(
+      "https://web.whatsapp.com/send?phone=" + phone + "&text=" + cupomFiscal,
+      "_blank"
+    );
+  }
+
+  function EventListener(e) {
+    if (e.target.value === "Dinheiro") {
+      setTroco(false);
+      setSelected(e.target.value);
+    } else {
+      setTroco(true);
+      setSelected(e.target.value);
+      setSelectedTroco("");
+    }
   }
 
   function handleMorePrice() {
@@ -201,6 +281,103 @@ export default function Loja(props) {
           </div>
         ))}
       </div>
+      {/* Modal para Encerrar o Pedido*/}
+
+      <MDBContainer>
+        <MDBModal isOpen={modalpedido} toggle={() => setModalPedido(false)}>
+          <MDBModalHeader toggle={() => setModalPedido(false)}>
+            Confirma Pedido?
+          </MDBModalHeader>
+          <MDBModalBody>
+            <MDBInput
+              label="Digite seu Nome *"
+              onChange={(e) => setCliente(e.target.value)}
+              icon=""
+              value={nomeCliente}
+              group
+              type="text"
+              error="wrong"
+              success="right"
+            />
+            <MDBInput
+              label="Digite seu CPF *"
+              onChange={(e) => setCpfMask(e.target.value)}
+              icon=""
+              value={maskCpf(cpfMask)}
+              group
+              type="text"
+              error="wrong"
+              success="right"
+            />
+            <select
+              className="browser-default custom-select"
+              value={selected}
+              onChange={(e) =>
+                e.target.value === "Dinheiro"
+                  ? EventListener(e)
+                  : EventListener(e)
+              }
+              style={{ marginBottom: 15 }}
+            >
+              <option value="" disabled>
+                Forma de Pagamento...
+              </option>
+              <option value="Débito">Cartão de Débito</option>
+              <option value="Crédito">Cartão de Crédito</option>
+              <option value="Dinheiro">Dinheiro</option>
+            </select>
+            <select
+              hidden={troco}
+              className="browser-default custom-select"
+              value={selectedTroco}
+              onChange={(e) => setSelectedTroco(e.target.value)}
+            >
+              <option value="" disabled>
+                Troco?
+              </option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+            {selectedTroco === "Sim" ? (
+              <MDBInput
+                label="Quanto de Troco?"
+                onChange={(e) => setValorTroco(e.target.value)}
+                icon=""
+                value={valorTroco}
+                group
+                type="text"
+                error="wrong"
+                success="right"
+              />
+            ) : (
+              ""
+            )}
+            <select
+              className="browser-default custom-select"
+              value={delivery}
+              onChange={(e) => setDelivery(e.target.value)}
+            >
+              <option value="" disabled>
+                Entrega ou Retirada?
+              </option>
+              <option value="Reirada">Retirada</option>
+              <option value="Entrega">Entrega</option>
+            </select>
+          </MDBModalBody>
+          <MDBModalFooter>
+            <MDBBtn
+              color="sucess"
+              className="conclude"
+              onClick={handlePedidoSend}
+            >
+              <FiCheckCircle size={18} />
+              <div>Confirmar</div>
+            </MDBBtn>
+          </MDBModalFooter>
+        </MDBModal>
+      </MDBContainer>
+
+      {/* Modal Adicionar Produto*/}
       <MDBContainer className="top">
         <MDBModal isOpen={modal} toggle={handleCloseUp}>
           <MDBModalHeader toggle={handleCloseUp}></MDBModalHeader>

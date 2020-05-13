@@ -281,3 +281,17 @@
 .top {
   margin-top: 2%;
 }
+
+.conclude {
+  width: 38%;
+  display: flex;
+  color: #50a773;
+}
+
+.conclude div {
+  margin-left: 5%;
+}
+
+/* .md-form label.active {
+  color: red !important;
+} */
