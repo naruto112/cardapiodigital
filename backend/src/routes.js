@@ -9,6 +9,7 @@ const routes = express.Router();
 
 //ROUTE USUARIO
 routes.post('/user/create', User.create);
+routes.post('/user/registration', User.RequestRegistration);
 routes.post('/user/login', User.authentication);
 routes.get('/user/all', User.all);
 routes.put('/user/update', User.update);
