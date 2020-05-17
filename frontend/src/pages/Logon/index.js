@@ -39,7 +39,8 @@ export default function Logon() {
 
       history.push("/painel");
     } catch (err) {
-      alert("ERROR:", err);
+      localStorage.clear();
+      alert("Usuário ou senha incorreta");
     }
   }
 

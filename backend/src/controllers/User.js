@@ -26,6 +26,9 @@ module.exports = {
             return response.status(400).send({ error: "Invalid password" });
           }
         });
+      })
+      .catch((err) => {
+        return response.status(200).json(err);
       });
   },
 
