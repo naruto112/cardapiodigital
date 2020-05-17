@@ -64,7 +64,7 @@ export default function Cadastro(props) {
         const { status } = response.data;
         if (status) {
           alert(
-            "Cadastro concluído, entre com seu email para se logar no sistema"
+            "Seja Bem vindo ao Cardápio Digital, entre com seu email para se logar."
           );
           history.push("/");
         }
