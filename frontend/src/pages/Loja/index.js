@@ -123,7 +123,10 @@ export default function Loja(props) {
 
     console.log(data[0]);
 
+    //Telefone do whatsapp do restaurante
     const phone = 5511987474136;
+
+
     let cupomFiscal = "";
     cupomFiscal += `*CardapioDigital - Novo pedido* %0A`;
     cupomFiscal += `----------------------------------------------- %0A`;

@@ -1,0 +1,18 @@
+.container-cadastro {
+    display: flex;
+    padding: 150px;
+}
+
+.logo-container {
+    padding-left: 180px;
+}
+
+.container-cadastro form {
+    width: 800px;
+    background: #FFF;
+    padding: 8px;
+    border-radius: 3px;
+    position: relative;
+    box-shadow: 0px 0px 4px rgba(9, 12, 11, 0.5);
+    padding: 45px !important;
+}
