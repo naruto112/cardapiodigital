@@ -1,29 +1,38 @@
 version: "3"
-networks:
-  cardapio:
 services:
   app:
     container_name: cardapio_api
-    image: node:10
-    networks:
-      - cardapio
+    image: node:12
     ports:
       - "3333:3333"
-    command: sh -c "npm i && npm run start"
+    networks:
+      - cardapio
     volumes:
       - ./backend:/backend
+    working_dir: /backend
+    command: sh -c "npm i && npm run start"
     environment:
       NODE_ENV: development
-  # client:
-  #   container_name: cardapio_client
-  #   image: node:10
-  #   networks:
-  #     - cardapio
-  #   ports:
-  #     - "3000:3000"
-  #   command: sh -c "npm i && npm run start"
-  #   working_dir: /app
-  #   volumes:
-  #     - ./frontend:/app
-  #   environment:
-  #     NODE_ENV: development
+    depends_on:
+      - fila
+  fila:
+    container_name: cardapio_fila
+    image: redis:alpine
+    networks:
+      - cardapio
+  client:
+    container_name: cardapio_client
+    image: node:12
+    ports:
+      - "3000:3000"
+    networks:
+      - cardapio
+    working_dir: /frontend
+    volumes:
+      - ./frontend:/frontend
+    command: sh -c "npm i && npm run start"
+    environment:
+      NODE_ENV: development
+    stdin_open: true
+networks:
+  cardapio:

@@ -1,7 +1,7 @@
 const dateFormat = require("dateformat");
 const now = new Date();
 const crypto = require("crypto");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const connection = require("../database/connection");
 const authConfig = require("../config/auth");
 const jwt = require("jsonwebtoken");
