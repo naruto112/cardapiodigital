@@ -4,7 +4,7 @@ services:
     container_name: cardapio_api
     image: node:12
     ports:
-      - "3333:3333"
+      - "8080:8080"
     networks:
       - cardapio
     volumes:
