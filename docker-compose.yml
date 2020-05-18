@@ -20,19 +20,19 @@ services:
     image: redis:alpine
     networks:
       - cardapio
-  client:
-    container_name: cardapio_client
-    image: node:alpine
-    ports:
-      - "3000:3000"
-    networks:
-      - cardapio
-    working_dir: /frontend
-    volumes:
-      - ./frontend:/frontend
-    command: sh -c "npm i && npm run start"
-    environment:
-      NODE_ENV: development
-    stdin_open: true
+  # client:
+  #   container_name: cardapio_client
+  #   image: node:alpine
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - cardapio
+  #   working_dir: /frontend
+  #   volumes:
+  #     - ./frontend:/frontend
+  #   command: sh -c "npm i && npm run start"
+  #   environment:
+  #     NODE_ENV: development
+  #   stdin_open: true
 networks:
   cardapio:
