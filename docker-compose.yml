@@ -27,9 +27,9 @@ services:
       - "3000:3000"
     networks:
       - cardapio
-    working_dir: /frontend
     volumes:
       - ./frontend:/frontend
+    working_dir: /frontend
     command: sh -c "npm i && npm run start"
     environment:
       NODE_ENV: development
