@@ -13,18 +13,26 @@ services:
     command: sh -c "npm i && npm run start"
     environment:
       NODE_ENV: development
+    depends_on:
+      - fila
+  fila:
+    container_name: cardapio_fila
+    image: redis:alpine
+    networks:
+      - cardapio
   client:
     container_name: cardapio_client
     image: node:12
-    networks:
-      - cardapio
     ports:
       - "3000:3000"
-    command: sh -c "npm i && npm run start"
+    networks:
+      - cardapio
     working_dir: /frontend
     volumes:
       - ./frontend:/frontend
+    command: sh -c "npm i && npm run start"
     environment:
       NODE_ENV: development
+    stdin_open: true
 networks:
   cardapio:
