@@ -1,4 +1,8 @@
 version: "3"
+networks:
+  cardapio:
+volumes:
+  app:
 services:
   api:
     container_name: cardapio_api
@@ -26,8 +30,3 @@ services:
       - ./frontend:/app
     environment:
       NODE_ENV: development
-    stdin_open: true
-networks:
-  cardapio:
-volumes:
-  app:
