@@ -21,8 +21,6 @@ services:
     ports:
       - "3000:3000"
     command: sh -c "npm i && npm run start"
-    depends_on:
-      - mongo
     working_dir: /app
     volumes:
       - ./frontend:/app
