@@ -2,7 +2,7 @@ version: "3"
 services:
   app:
     container_name: cardapio_api
-    image: node:12
+    image: node:alpine
     ports:
       - "3333:3333"
     networks:
@@ -22,7 +22,7 @@ services:
       - cardapio
   client:
     container_name: cardapio_client
-    image: node:12
+    image: node:alpine
     ports:
       - "3000:3000"
     networks:
