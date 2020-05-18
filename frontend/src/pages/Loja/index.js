@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import jwt from "jsonwebtoken";
+import AuthConfig from "../../config/auth.json";
 import {
   MDBBtn,
   MDBContainer,
@@ -19,7 +21,6 @@ import api from "../../services/api";
 
 export default function Loja(props) {
   const { name } = props.match.params;
-  const token = localStorage.getItem("token");
   const [produtos, setProdutos] = useState([]);
   const [produto, setProduto] = useState([]);
   const [count, setCount] = useState(1);
@@ -45,6 +46,10 @@ export default function Loja(props) {
     setLoader(true);
 
     async function handleMenuProduto(name) {
+      const token = jwt.sign({ id: 10 }, AuthConfig.secret, {
+        expiresIn: 200,
+      });
+
       await api
         .get(`cardapio/loja/${name}`, {
           headers: {
@@ -56,7 +61,7 @@ export default function Loja(props) {
           setLoader(false);
         });
     }
-  }, [name, token]);
+  }, [name]);
 
   async function handleClick(key) {
     await api.get(`produto/${key}`, {}).then((resp) => {
@@ -125,7 +130,6 @@ export default function Loja(props) {
 
     //Telefone do whatsapp do restaurante
     const phone = 5511987474136;
-
 
     let cupomFiscal = "";
     cupomFiscal += `*CardapioDigital - Novo pedido* %0A`;
