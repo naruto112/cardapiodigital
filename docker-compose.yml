@@ -1,0 +1,35 @@
+version: "3"
+services:
+  api:
+    container_name: cardapio_api
+    image: node:10
+    networks:
+      - cardapio
+    ports:
+      - "5000:5000"
+    command: sh -c "npm i && npm run start"
+    working_dir: /backend
+    volumes:
+      - ./backend:/app
+    environment:
+      NODE_ENV: development
+  client:
+    container_name: cardapio_client
+    image: node:10
+    networks:
+      - cardapio
+    ports:
+      - "3000:3000"
+    command: sh -c "npm i && npm run start"
+    depends_on:
+      - mongo
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    environment:
+      NODE_ENV: development
+    stdin_open: true
+networks:
+  cardapio:
+volumes:
+  app:
