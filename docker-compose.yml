@@ -1,17 +1,16 @@
 version: "3"
-networks:
-  cardapio:
 services:
   app:
     container_name: cardapio_api
-    image: node:10
-    networks:
-      - cardapio
+    image: node:12
     ports:
       - "3333:3333"
-    command: sh -c "npm i && npm run start"
+    networks:
+      - cardapio
     volumes:
       - ./backend:/backend
+    working_dir: /backend
+    command: sh -c "npm i && npm run start"
     environment:
       NODE_ENV: development
   # client:
@@ -27,3 +26,5 @@ services:
   #     - ./frontend:/app
   #   environment:
   #     NODE_ENV: development
+networks:
+  cardapio:
