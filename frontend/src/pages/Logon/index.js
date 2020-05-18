@@ -11,6 +11,8 @@ import cardapioImg from "../../assets/logo_menu.png";
 export default function Logon() {
   const [user, setUser] = useState("");
   const [passwd, setPasswd] = useState("");
+  const [verifyuser, setVerifyuser] = useState(true);
+  const [verifypass, setVerifypass] = useState(true);
 
   const token = localStorage.getItem("token");
 
@@ -31,6 +33,13 @@ export default function Logon() {
         passwd,
       });
 
+      const { error } = response.data;
+
+      if (error) {
+        setVerifypass(false);
+        return false;
+      }
+
       const { res, token } = response.data;
 
       localStorage.setItem("token", token);
@@ -40,12 +49,18 @@ export default function Logon() {
       history.push("/painel");
     } catch (err) {
       localStorage.clear();
-      alert("Usuário ou senha incorreta");
+      setVerifyuser(false);
     }
   }
 
   return (
     <div>
+      <div className="alert alert-danger" role="alert" hidden={verifyuser}>
+        E-mail usado para login está incorreto
+      </div>
+      <div className="alert alert-danger" role="alert" hidden={verifypass}>
+        Senha incorreta
+      </div>
       <div className="logon-container">
         <section className="form">
           <h1>.Cardápio Digital</h1>
@@ -58,7 +73,7 @@ export default function Logon() {
             />
             <input
               type="password"
-              placeholder="Digite a senha"
+              placeholder="Digite sua senha"
               value={passwd}
               onChange={(e) => setPasswd(e.target.value)}
             />

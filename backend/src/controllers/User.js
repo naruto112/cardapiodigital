@@ -23,7 +23,7 @@ module.exports = {
 
             return response.status(200).json({ res, token });
           } else {
-            return response.status(400).send({ error: "Invalid password" });
+            return response.status(200).send({ error: "Invalid password" });
           }
         });
       })
