@@ -8,7 +8,7 @@ services:
     networks:
       - cardapio
     ports:
-      - "5000:5000"
+      - "3333:3333"
     command: sh -c "npm i && npm run start"
     working_dir: /backend
     volumes:
