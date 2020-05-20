@@ -27,6 +27,7 @@ export default function Loja(props) {
   const [loader, setLoader] = useState(false);
   const [modal, setModal] = useState(false);
   const [cpfMask, setCpfMask] = useState("");
+  const [endereco, setEndereco] = useState("");
   const [nomeCliente, setCliente] = useState("");
   const [selected, setSelected] = useState("");
   const [selectedTroco, setSelectedTroco] = useState("");
@@ -92,7 +93,7 @@ export default function Loja(props) {
     setModalPedido(true);
   }
 
-  function handlePedidoSend() {
+  async function handlePedidoSend() {
     const data = [];
 
     const dNow = new Date();
@@ -126,8 +127,6 @@ export default function Loja(props) {
       data.push({ formPgto: selected });
     }
 
-    console.log(data[0]);
-
     //Telefone do whatsapp do restaurante
     const phone = 5511987474136;
 
@@ -157,11 +156,30 @@ export default function Loja(props) {
     cupomFiscal += `${data[2].cpf} %0A`;
     cupomFiscal += `_Pedido recebido pelo Cardápio Digital às ${localdate}_ %0A`;
 
-    window.encodeURIComponent(cupomFiscal);
-    window.open(
-      "https://web.whatsapp.com/send?phone=" + phone + "&text=" + cupomFiscal,
-      "_blank"
-    );
+    // window.encodeURIComponent(cupomFiscal);
+    // window.open(
+    //   "https://web.whatsapp.com/send?phone=" + phone + "&text=" + cupomFiscal,
+    //   "_blank"
+    // );
+
+    //Enviar envia APi axio para o backend a gravação do pedido solicitação pelo cliente.
+    const token = jwt.sign({ id: 10 }, AuthConfig.secret, {
+      expiresIn: 200,
+    });
+    const content = {
+      name,
+      cupomFiscal,
+      phone,
+    };
+    await api
+      .post(`pedido`, content, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((resp) => {
+        console.log(resp);
+      });
   }
 
   function EventListener(e) {
@@ -188,7 +206,17 @@ export default function Loja(props) {
   }
 
   function handleRemove(index) {
+    const valueProduto = pedido[index].produto.value;
+    const totalValor = handleLessValue(totalPedido, valueProduto);
+    setTotalPedido(totalValor);
     setPedido(pedido.filter((value) => value !== pedido[index]));
+  }
+
+  function handleLessValue(v1, v2) {
+    const v =
+      parseFloat(v1.replace(",", ".")) - parseFloat(v2.replace(",", "."));
+
+    return v.toFixed(2).toString().replace(".", ",");
   }
 
   function handleLessPrice(value) {
@@ -364,12 +392,24 @@ export default function Loja(props) {
               value={delivery}
               onChange={(e) => setDelivery(e.target.value)}
             >
-              <option value="" disabled>
-                Entrega ou Retirada?
-              </option>
+              <option value="">Entrega ou Retirada?</option>
               <option value="Reirada">Retirada</option>
               <option value="Entrega">Entrega</option>
             </select>
+            {delivery === "Entrega" ? (
+              <MDBInput
+                label="Digite seu Endeço"
+                onChange={(e) => setEndereco(e.target.value)}
+                icon=""
+                value={endereco}
+                group
+                type="text"
+                error="wrong"
+                success="right"
+              />
+            ) : (
+              ""
+            )}
           </MDBModalBody>
           <MDBModalFooter>
             <MDBBtn

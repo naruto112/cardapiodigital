@@ -165,7 +165,9 @@ module.exports = {
           "produto.nome",
           "produto.descricao",
           "produto.valor",
-          "produto.base64"
+          "produto.base64",
+          "produto.menu_id",
+          { cardapio_id: "generated_cardapio.id" }
         );
 
       return response.status(200).json({ loja });
