@@ -160,12 +160,16 @@ module.exports = {
         .where("domain", name)
         .join("menu", { "generated_cardapio.menu_id": "menu.id" })
         .join("produto", { "menu.id": "produto.menu_id" })
+        .join("usuario", { "menu.usuario_id": "usuario.id" })
         .select(
           "produto.id",
           "produto.nome",
           "produto.descricao",
           "produto.valor",
-          "produto.base64"
+          "produto.base64",
+          "produto.menu_id",
+          { cardapio_id: "generated_cardapio.id" },
+          "usuario.phone"
         );
 
       return response.status(200).json({ loja });

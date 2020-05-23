@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { FiLogIn } from "react-icons/fi";
 import { Link, useHistory } from "react-router-dom";
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBBtn,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+} from "mdbreact";
 
 import api from "../../services/api";
 
 import "./styles.css";
 
-import cardapioImg from "../../assets/logo_menu.png";
+import cardapioImg from "../../assets/cardapio_digital.png";
 
 export default function Logon() {
   const [user, setUser] = useState("");
@@ -62,31 +71,76 @@ export default function Logon() {
         Senha incorreta
       </div>
       <div className="logon-container">
-        <section className="form">
-          <h1>.Cardápio Digital</h1>
+        <MDBContainer>
           <form onSubmit={handleLogin}>
-            <h2>Faça seu Logon</h2>
-            <input
-              placeholder="Seu e-mail"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Digite sua senha"
-              value={passwd}
-              onChange={(e) => setPasswd(e.target.value)}
-            />
-            <button className="button" type="submit">
-              Entrar
-            </button>
-            <Link className="back-link" to="/register">
-              <FiLogIn size={16} color="#545152" />
-              Solicite um cadastro
-            </Link>
+            <MDBRow>
+              <MDBCol md="6">
+                <MDBCard>
+                  <div className="header pt-3 grey lighten-2">
+                    <MDBRow className="d-flex justify-content-start">
+                      <h3 className="deep-grey-text mt-3 mb-4 pb-1 mx-5">
+                        <div className="title-login">
+                          <div>.Cardapio Digital</div>
+                          <img
+                            src={cardapioImg}
+                            alt="Cardapio Digigital"
+                            width={50}
+                          />
+                        </div>
+                      </h3>
+                    </MDBRow>
+                  </div>
+                  <MDBCardBody className="mx-4 mt-4">
+                    <MDBInput
+                      label="E-mail"
+                      group
+                      type="text"
+                      validate
+                      value={user}
+                      onChange={(e) => setUser(e.target.value)}
+                    />
+                    <MDBInput
+                      label="Senha"
+                      group
+                      type="password"
+                      validate
+                      containerClass="mb-0"
+                      value={passwd}
+                      onChange={(e) => setPasswd(e.target.value)}
+                    />
+                    <p className="font-small grey-text d-flex justify-content-end">
+                      Esqueceu a
+                      <a
+                        href="#!"
+                        className="dark-grey-text font-weight-bold ml-1"
+                      >
+                        Senha?
+                      </a>
+                    </p>
+                    <div className="text-center mb-4 mt-5">
+                      <MDBBtn
+                        color="dark"
+                        type="submit"
+                        className="btn-block z-depth-2"
+                      >
+                        Entrar
+                      </MDBBtn>
+                    </div>
+                    <p className="font-small grey-text d-flex justify-content-center">
+                      Você ainda não tem conta?
+                      <Link
+                        to="/register"
+                        className="dark-grey-text font-weight-bold ml-1"
+                      >
+                        Solicite aqui
+                      </Link>
+                    </p>
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
           </form>
-        </section>
-        <img src={cardapioImg} alt="CardDigital" />
+        </MDBContainer>
       </div>
     </div>
   );

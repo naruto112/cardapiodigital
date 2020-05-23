@@ -21,6 +21,7 @@ export default function Header() {
     <div className="topnav">
       <Link to="/painel">Painel</Link>
       <Link to="/cardapio">Gerar Cardápio</Link>
+      <Link to="/pedido">Pedidos</Link>
       <div className="login-container">
         <input type="text" placeholder={name} name="username" disabled={true} />
         <button type="submit" onClick={handleLogout}>

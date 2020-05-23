@@ -16,24 +16,29 @@ import Footer from "../Footer";
 import "./styles.css";
 import Loader from "react-loader-spinner";
 import ImageSacola from "../../assets/sacola_vazia.png";
-import { maskCpf } from "../../config/mask";
+import { maskCpf } from "../../config/maskCPF";
+import { maskPhone } from "../../config/maskPhone";
 import api from "../../services/api";
 
 export default function Loja(props) {
   const { name } = props.match.params;
+  const [phoneloja, setPhoneloja] = useState("");
   const [produtos, setProdutos] = useState([]);
   const [produto, setProduto] = useState([]);
   const [count, setCount] = useState(1);
   const [loader, setLoader] = useState(false);
   const [modal, setModal] = useState(false);
   const [cpfMask, setCpfMask] = useState("");
+  const [endereco, setEndereco] = useState("");
   const [nomeCliente, setCliente] = useState("");
+  const [phonecliente, setPhonecliente] = useState("");
   const [selected, setSelected] = useState("");
   const [selectedTroco, setSelectedTroco] = useState("");
   const [delivery, setDelivery] = useState("");
   const [troco, setTroco] = useState(true);
   const [valorTroco, setValorTroco] = useState("");
   const [modalpedido, setModalPedido] = useState(false);
+  const [modaltanks, setModaltanks] = useState(false);
   const [pedido, setPedido] = useState([]);
   const [detail, setDetail] = useState("");
   let [idPedido, setIdPedido] = useState(10);
@@ -57,6 +62,7 @@ export default function Loja(props) {
           },
         })
         .then((resp) => {
+          setPhoneloja(resp.data.loja[0].phone);
           setProdutos(resp.data.loja);
           setLoader(false);
         });
@@ -92,7 +98,7 @@ export default function Loja(props) {
     setModalPedido(true);
   }
 
-  function handlePedidoSend() {
+  async function handlePedidoSend() {
     const data = [];
 
     const dNow = new Date();
@@ -126,11 +132,6 @@ export default function Loja(props) {
       data.push({ formPgto: selected });
     }
 
-    console.log(data[0]);
-
-    //Telefone do whatsapp do restaurante
-    const phone = 5511987474136;
-
     let cupomFiscal = "";
     cupomFiscal += `*CardapioDigital - Novo pedido* %0A`;
     cupomFiscal += `----------------------------------------------- %0A`;
@@ -145,6 +146,10 @@ export default function Loja(props) {
     cupomFiscal += `----------------------------------------------- %0A`;
     cupomFiscal += `*Entrega ou Retirada?* %0A`;
     cupomFiscal += `${delivery} %0A`;
+    if (delivery === "Entrega") {
+      cupomFiscal += `*End:* ${endereco} %0A`;
+      cupomFiscal += `----------------------------------------------- %0A`;
+    }
     cupomFiscal += `*Como você vai pagar?* %0A`;
     cupomFiscal += `${data[3].formPgto} %0A`;
     if (selectedTroco) {
@@ -157,11 +162,68 @@ export default function Loja(props) {
     cupomFiscal += `${data[2].cpf} %0A`;
     cupomFiscal += `_Pedido recebido pelo Cardápio Digital às ${localdate}_ %0A`;
 
+
     window.encodeURIComponent(cupomFiscal);
     window.open(
-      "https://web.whatsapp.com/send?phone=" + phone + "&text=" + cupomFiscal,
+      "https://web.whatsapp.com/send?phone=" +
+        phoneloja +
+        "&text=" +
+        cupomFiscal,
       "_blank"
     );
+
+    //Cupom Formatado para gravar no banco de dados
+    let pedido_cupom = "";
+    pedido_cupom += `<p><b>CardapioDigital - Novo pedido</b></p>`;
+    pedido_cupom += `<p>-----------------------------------------------</p>`;
+    data[0].map((note) => {
+      pedido_cupom += `<p><b>${note.produto.count}x ${note.produto.name}</b> R$ ${note.produto.value}</p>`;
+      pedido_cupom += `<p>- Obs: ${
+        note.produto.detail === "" ? "nenhuma" : note.produto.detail
+      } </p>`;
+    });
+    pedido_cupom += `<p><b>Total: R$ ${data[1].total}</b></p>`;
+    pedido_cupom += `<p>-----------------------------------------------</p>`;
+    pedido_cupom += `<p><b>Entrega ou Retirada?</b></p>`;
+    pedido_cupom += `<p>${delivery}</p>`;
+    if (delivery === "Entrega") {
+      pedido_cupom += `<p><b>End:</b> ${endereco}</p>`;
+      pedido_cupom += `<p>-----------------------------------------------</p>`;
+    }
+    pedido_cupom += `<p><b>Como você vai pagar?</b></p>`;
+    pedido_cupom += `<p>${data[3].formPgto}</p>`;
+    if (selectedTroco) {
+      pedido_cupom += `<p><b>Troco para quanto?</b></p>`;
+      pedido_cupom += `<p>R$ ${valorTroco}</p>`;
+    }
+    pedido_cupom += `<p><b>Nome</b></p>`;
+    pedido_cupom += `<p>${nomeCliente}</p>`;
+    pedido_cupom += `<p><b>CPF</b></p>`;
+    pedido_cupom += `<p>${data[2].cpf}</p>`;
+    pedido_cupom += `<p>Pedido recebido pelo Cardápio Digital às ${localdate}</p>`;
+
+
+
+    //Enviar envia APi axio para o backend a gravação do pedido solicitação pelo cliente.
+    const token = jwt.sign({ id: 10 }, AuthConfig.secret, {
+      expiresIn: 200,
+    });
+    const content = {
+      nomeloja: name,
+      pedido_cupom,
+      phonecliente,
+    };
+    await api
+      .post(`pedido`, content, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((resp) => {
+        const { status } = resp.data;
+        status ? setModalPedido(false) : setModalPedido(true);
+        status ? setModaltanks(true) : setModaltanks(false);
+      });
   }
 
   function EventListener(e) {
@@ -188,7 +250,16 @@ export default function Loja(props) {
   }
 
   function handleRemove(index) {
+    const valueProduto = pedido[index].produto.value;
+    const totalValor = handleLessValue(totalPedido, valueProduto);
+    setTotalPedido(totalValor);
     setPedido(pedido.filter((value) => value !== pedido[index]));
+  }
+
+  function handleLessValue(v1, v2) {
+    const v =
+      parseFloat(v1.replace(",", ".")) - parseFloat(v2.replace(",", "."));
+    return v.toFixed(2).toString().replace(".", ",");
   }
 
   function handleLessPrice(value) {
@@ -289,7 +360,6 @@ export default function Loja(props) {
         ))}
       </div>
       {/* Modal para Encerrar o Pedido*/}
-
       <MDBContainer>
         <MDBModal isOpen={modalpedido} toggle={() => setModalPedido(false)}>
           <MDBModalHeader toggle={() => setModalPedido(false)}>
@@ -311,6 +381,16 @@ export default function Loja(props) {
               onChange={(e) => setCpfMask(e.target.value)}
               icon=""
               value={maskCpf(cpfMask)}
+              group
+              type="text"
+              error="wrong"
+              success="right"
+            />
+            <MDBInput
+              label="Digite seu Celular com DDD *"
+              onChange={(e) => setPhonecliente(e.target.value)}
+              icon=""
+              value={maskPhone(phonecliente)}
               group
               type="text"
               error="wrong"
@@ -364,12 +444,24 @@ export default function Loja(props) {
               value={delivery}
               onChange={(e) => setDelivery(e.target.value)}
             >
-              <option value="" disabled>
-                Entrega ou Retirada?
-              </option>
+              <option value="">Deseja que entregue ou irá retirar?</option>
               <option value="Reirada">Retirada</option>
               <option value="Entrega">Entrega</option>
             </select>
+            {delivery === "Entrega" ? (
+              <MDBInput
+                label="Digite seu Endereço"
+                onChange={(e) => setEndereco(e.target.value)}
+                icon=""
+                value={endereco}
+                group
+                type="text"
+                error="wrong"
+                success="right"
+              />
+            ) : (
+              ""
+            )}
           </MDBModalBody>
           <MDBModalFooter>
             <MDBBtn
@@ -437,6 +529,18 @@ export default function Loja(props) {
             >
               <span>Adicionar</span>
               <span>R$ {totalValor === 0 ? valor : totalValor}</span>
+            </MDBBtn>
+          </MDBModalFooter>
+        </MDBModal>
+      </MDBContainer>
+      {/* Modal de agradecimentos do pedido finalizado*/}
+      <MDBContainer>
+        <MDBModal isOpen={modaltanks} toggle={() => {}}>
+          <MDBModalHeader>Pedido 🍽️</MDBModalHeader>
+          <MDBModalBody>Tudo certo... seu pedido está a caminho👨‍🍳</MDBModalBody>
+          <MDBModalFooter>
+            <MDBBtn color="dark" onClick={() => window.location.reload()}>
+              VOLTAR
             </MDBBtn>
           </MDBModalFooter>
         </MDBModal>
