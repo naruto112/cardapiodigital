@@ -162,6 +162,7 @@ export default function Loja(props) {
     cupomFiscal += `${data[2].cpf} %0A`;
     cupomFiscal += `_Pedido recebido pelo Cardápio Digital às ${localdate}_ %0A`;
 
+
     window.encodeURIComponent(cupomFiscal);
     window.open(
       "https://web.whatsapp.com/send?phone=" +
@@ -171,13 +172,45 @@ export default function Loja(props) {
       "_blank"
     );
 
+    //Cupom Formatado para gravar no banco de dados
+    let pedido_cupom = "";
+    pedido_cupom += `<p><b>CardapioDigital - Novo pedido</b></p>`;
+    pedido_cupom += `<p>-----------------------------------------------</p>`;
+    data[0].map((note) => {
+      pedido_cupom += `<p><b>${note.produto.count}x ${note.produto.name}</b> R$ ${note.produto.value}</p>`;
+      pedido_cupom += `<p>- Obs: ${
+        note.produto.detail === "" ? "nenhuma" : note.produto.detail
+      } </p>`;
+    });
+    pedido_cupom += `<p><b>Total: R$ ${data[1].total}</b></p>`;
+    pedido_cupom += `<p>-----------------------------------------------</p>`;
+    pedido_cupom += `<p><b>Entrega ou Retirada?</b></p>`;
+    pedido_cupom += `<p>${delivery}</p>`;
+    if (delivery === "Entrega") {
+      pedido_cupom += `<p><b>End:</b> ${endereco}</p>`;
+      pedido_cupom += `<p>-----------------------------------------------</p>`;
+    }
+    pedido_cupom += `<p><b>Como você vai pagar?</b></p>`;
+    pedido_cupom += `<p>${data[3].formPgto}</p>`;
+    if (selectedTroco) {
+      pedido_cupom += `<p><b>Troco para quanto?</b></p>`;
+      pedido_cupom += `<p>R$ ${valorTroco}</p>`;
+    }
+    pedido_cupom += `<p><b>Nome</b></p>`;
+    pedido_cupom += `<p>${nomeCliente}</p>`;
+    pedido_cupom += `<p><b>CPF</b></p>`;
+    pedido_cupom += `<p>${data[2].cpf}</p>`;
+    pedido_cupom += `<p>Pedido recebido pelo Cardápio Digital às ${localdate}</p>`;
+
+
+
     //Enviar envia APi axio para o backend a gravação do pedido solicitação pelo cliente.
     const token = jwt.sign({ id: 10 }, AuthConfig.secret, {
       expiresIn: 200,
     });
     const content = {
       nomeloja: name,
-      pedido_cupom: cupomFiscal,
+      pedido_cupom,
       phonecliente,
     };
     await api
