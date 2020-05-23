@@ -97,7 +97,7 @@ module.exports = {
         cep,
         address,
         number,
-        phone,
+        phone: "55" + phone,
         token,
         created_datetime,
         update_datetime,
