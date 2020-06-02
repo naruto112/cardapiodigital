@@ -17,6 +17,7 @@ routes.delete("/user/delete", User.delete);
 
 //ROUTE PEDIDO
 routes.post("/pedido", Pedido.ClosedPedido);
+routes.get("/pedido/:id", Pedido.allPedido);
 
 //ROUTE CARDAPIO
 routes.post("/cardapio/all", Cardapio.all);

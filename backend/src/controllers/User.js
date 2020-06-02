@@ -18,7 +18,7 @@ module.exports = {
         bcrypt.compare(passwd, res[0].password, function (err, result) {
           if (result) {
             const token = jwt.sign({ id: 10 }, authConfig.secret, {
-              expiresIn: 60,
+              expiresIn: 86400,
             });
 
             return response.status(200).json({ res, token });

@@ -10,9 +10,7 @@ import {
   MDBCardBody,
   MDBInput,
 } from "mdbreact";
-
 import api from "../../services/api";
-
 import "./styles.css";
 
 import cardapioImg from "../../assets/cardapio_digital.png";

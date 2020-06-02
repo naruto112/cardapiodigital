@@ -6,7 +6,19 @@ const cryptoRandomString = require("crypto-random-string");
 const now = new Date();
 
 module.exports = {
-  async allPedido(request, response) {},
+  async allPedido(request, response) {
+    const { id } = request.params;
+
+    const resp = await connection("pedido")
+      .where("menu.usuario_id", id)
+      .select("pedido_cupom")
+      .join("generated_cardapio", {
+        "pedido.nomeloja": "generated_cardapio.domain",
+      })
+      .join("menu", { "generated_cardapio.menu_id": "menu.id" });
+
+    return response.status(200).json({ resp });
+  },
   async PedidobyID(request, response) {},
   async ClosedPedido(request, response) {
     const token = request.headers.authorization;

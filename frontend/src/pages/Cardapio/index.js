@@ -72,7 +72,7 @@ export default function Cardapio() {
       <MDBContainer>
         <MDBRow>
           <MDBCol md="12">
-            <form className="top" onSubmit={handleSubmit}>
+            <form className="top-cardapio" onSubmit={handleSubmit}>
               <p className="h5 text-center mb-4">
                 Escolha o cardápio e LET'S GO
               </p>
