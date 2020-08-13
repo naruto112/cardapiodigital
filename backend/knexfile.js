@@ -6,10 +6,10 @@ module.exports = {
     client: 'mysql',
     version: '5.6',
     connection: {
-      host : '128.201.72.245',
-      user : 'contvit_cardapio',
-      password : 'p8F7x4^d',
-      database : 'contvit_cardapio'
+      host : 'localhost',
+      user : 'root',
+      password : 'd26m06',
+      database : 'cardapio'
     },
     debug: true,
     pool: {
